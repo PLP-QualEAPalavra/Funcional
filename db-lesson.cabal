@@ -1,0 +1,4 @@
+build-depends:       base
+                     , db-notes
+                     , time
+                     , sqlite-simple
