@@ -7,20 +7,28 @@ import System.Directory
 main :: IO()
 main = do
   startTermoo
-  dBase <- openFile "palavras.txt" ReadMode 
-  conteudo <- hGetLine dBase
-  termoo 5 150 conteudo
+  dBase <- readFileLines "palavras.txt" 
+  termoo 5 150 dBase
 
-termoo :: Int -> Int -> String -> IO()
-termoo life pontos word = do
-  texts life pontos word
+termoo :: Int -> Int -> [String] -> IO()
+termoo life pontos [] = do
+  record pontos
+termoo life pontos (primeiraPalavra:resto) = do
+  texts life pontos primeiraPalavra
   tentativa <- getLine
   putStrLn $ " _____________________________________________"
-  if length tentativa /= length word  then do 
+  if length tentativa /= length primeiraPalavra  then do 
     erroTamanhoPalavra
-    termoo life pontos word
-  else verificaWord tentativa word pontos
-  if life > 1 then termoo (life - 1) (pontos - 25) word 
+    termoo life pontos (primeiraPalavra:resto)
+  else do
+    if tentativa == primeiraPalavra then do
+      acerto
+      termoo 5 (pontos+150) resto
+    else do 
+      putStrLn $ ""
+      putStr $ " Tentativa anterior: " 
+      colorWord tentativa primeiraPalavra primeiraPalavra 
+  if life > 1 then termoo (life - 1) (pontos - 25) (primeiraPalavra:resto)
   else do 
     gameOver 
     record pontos
@@ -50,17 +58,10 @@ colorWord (head:body) (cabeca:corpo) (topo:pilha)= do
     putStr $ " \ESC[90m" ++ [head] ++ "\ESC[0m"
     colorWord body corpo (topo:pilha)
 
---Verificação da palavra
+--Pegar palavras
+readFileLines :: FilePath -> IO [String]
+readFileLines = fmap lines.readFile
 
-verificaWord :: String -> String -> Int -> IO()
-verificaWord palavraInserida palavraGuardada pontos = 
-  if palavraInserida == palavraGuardada then do
-    acerto
-    record pontos
-  else do 
-    putStrLn $ ""
-    putStr $ " Tentativa anterior: " 
-    colorWord palavraInserida palavraGuardada palavraGuardada
 
 --Record
 record :: Int -> IO()
@@ -73,6 +74,7 @@ record pontos = do
   hPutStr recordT ", "
   hPutStrLn recordT (show pontos)
   hFlush recordT
+  hClose recordT
 
 
 --Menssagens do jogo
