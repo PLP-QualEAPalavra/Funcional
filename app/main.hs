@@ -4,6 +4,7 @@ import System.IO
 import System.Exit
 import System.Process
 import System.Directory
+import Data.Char (toUpper)
 
 main :: IO()
 main = do
@@ -90,7 +91,8 @@ recordesController op = do
 
 jogosController :: Char -> IO()
 jogosController op = do
-  if op == '2' then mainTermoo
+  if op == '1' then mainAnagrama
+  else if op == '2' then mainTermoo
   --else if op == '2' then mainAnagrama
   --else if op == '3' then creditos
   else if op == '0' then menuText
@@ -222,7 +224,108 @@ buscaValor (p1:pn) (n1:nn) maior = do
     hClose arqRecorde
   else buscaValor pn nn maior
 
+--anagrama
+mainAnagrama :: IO()
+mainAnagrama = do
+  Letreiros.startanagrama
+  dBase <- readFileLines "anagrama.txt" 
+  anagrama 10 dBase 1
+
+takeI:: Int -> Int
+takeI 4 = 1;
+takeI 3 = 2;
+takeI 2 = 3;
+takeI 1 = 4;
+takeI 0 = 5;
+
+criaLista:: [String] -> String -> [String]
+criaLista words tentativa = [word | word <- words, word /= tentativa]
+
+checkWordIsCorrect :: String -> [String] -> Bool
+checkWordIsCorrect _ [] = False
+checkWordIsCorrect tentativa (word : words) = 
+  if tentativa == word then True
+    -- putStrLn $ " Voce acertou a palavra " ++ show (takeI (length words)) ++ "\n" ++ " " ++ word
+    -- drop (takeI (length words - 1)) words
+    -- colorWord tentativa word word (takeI (length words))
+  else do 
+    checkWordIsCorrect tentativa words
+    -- colorWord tentativa word word (takeI (length words))
 
 
+-- upper :: String -> String
+-- upper [x] = toUpper [x]
+-- upper (w:ws) = toUpper (ws) ++ upper ws
+
+reverser :: String -> String
+reverser [x] = [x]
+reverser word = reverse word
+
+joinWord :: [String] -> String
+joinWord [] = ""
+joinWord (w:ws) = reverser (w) ++ joinWord ws 
+
+removeDup :: String -> String
+removeDup [] = [] 
+removeDup [a] = [a] 
+removeDup (x:xs) = x:(removeDup $ filter (/=x) xs)
+
+anagrama :: Int -> [String] -> Int -> IO()
+anagrama 0 _ _ = do
+  Letreiros.gameOver
+anagrama pontos [] _ = do
+   Letreiros.acerto
+
+anagrama pontos xs mutiplicador = do
+  putStrLn $ ""
+  putStrLn $ " Forme o maior número possível de palavras usando as letras disponíveis."
+  putStrLn $ ""
+  putStrLn $ " " ++ addSpace (removeDup (joinWord xs))
+  textsAnagrama pontos xs
+  tentativa <- getLine :: IO String
+  putStrLn $ " _____________________________________________"
+
+  if length tentativa >= 1 then do
+    if checkWordIsCorrect tentativa xs 
+      then do 
+        putStrLn $ " Voce acertou a palavra " ++ "\n" ++ " " ++ tentativa
+        anagrama (pontos+(10*mutiplicador)) (criaLista xs tentativa) (mutiplicador + 1)
+    else anagrama (pontos-1) xs 1
+  else 
+    anagrama pontos xs 1
+  
+-- --Customização da palavra
+-- addSpace:: [Char] -> [Char]
+-- addSpace xs = if length xs == 1
+--               then xs
+--               else take (length xs - (length xs - 1)) xs ++ " " ++ addSpace (drop 1 xs)
+
+-- hiddenWord :: [Char] -> [Char]
+-- hiddenWord xs = ['_' | length xs /= 0, x <- xs];
+
+-- --Pegar palavras
+-- readFileLines :: FilePath -> IO [String]
+-- readFileLines = fmap lines.readFile
+
+iteraText:: [String] -> String
+iteraText [] = ""
+iteraText (x:xs) = if length xs >= 0 then
+  "   " ++ addSpace (hiddenWord x) ++ "\n" ++ iteraText xs
+  else ""
+
+textsAnagrama :: Int -> [String] -> IO()
+textsAnagrama pontos words = do
+  putStrLn $ " _____________________________________________"
+  putStrLn $ ""
+  putStrLn $ " Pontos: " ++ show pontos
+  putStrLn $ ""
+  putStrLn $ " Tentativas restantes: ATE ACERTAR"
+  putStrLn $ ""
+  putStrLn $ " Palavras restantes:"
+  -- putStrLn $ " Pontos: " ++ show pontos
+  putStrLn $ ""
+  putStrLn $ iteraText $ words
+  putStrLn $ ""
+  putStr $ " Insira Palavra:  "
 
 
