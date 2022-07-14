@@ -4,8 +4,8 @@ import System.IO
 import System.Directory
 
 --Termoo
-main :: IO()
-main = do
+mainTermo :: IO()
+mainTermo = do
   startTermoo
   dBase <- readFileLines "palavras.txt" 
   termoo 5 150 dBase
