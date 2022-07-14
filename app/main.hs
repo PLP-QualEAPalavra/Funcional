@@ -4,7 +4,6 @@ import System.IO
 import System.Exit
 import System.Process
 import System.Directory
-import Char
 
 main :: IO()
 main = do
@@ -50,7 +49,7 @@ menuRecordes = do
   putStr $ " Qual a sua opção:  "
   op <- getChar
   getChar
-  jogosController op
+  recordesController op
 
 creditos:: IO()
 creditos = do 
@@ -82,8 +81,8 @@ menusController op = do
 
 recordesController :: Char -> IO()
 recordesController op = do
-    if op == "2" then mainRecordTermoo
-    else if op == "0" then menuText
+    if op == '2' then mainRecord
+    else if op == '0' then menuText
     else do
         putStrLn $ "Opção invalida insira uma das opções"
         menuRecordes
@@ -197,9 +196,33 @@ erroTamanhoPalavra = do
   putStrLn $ "\ESC[31mERRO: Tamanho de palavra incorreto\ESC[0m"
 
 --Recordes
-mainRecordTermoo:: IO()
-mainRecordTermoo = do 
+mainRecord:: IO()
+mainRecord = do 
     arqNames <- readFileLines "recordTermoName.txt"
     arqPontos <- readFileLines "recordTermoPontos.txt"
-    putStrLn $ arqNames
-    putStrLn $ arqPontos
+    buscaValor arqPontos arqNames $ getMaiorRecord arqPontos
+
+getMaiorRecord :: [String] -> Int
+getMaiorRecord [y] = read y::Int
+getMaiorRecord (cabeca:corpo) = do 
+  let valor =  read cabeca::Int
+  if  valor > getMaiorRecord corpo then do valor
+  else getMaiorRecord corpo
+
+buscaValor :: [String] -> [String] -> Int -> IO()
+buscaValor (p1:pn) (n1:nn) maior = do
+  let valor = read p1::Int
+  if valor == maior then do
+    arqRecorde <- openFile "recordTermo.txt" AppendMode
+    hPutStr arqRecorde "Jogador : "
+    hPutStr arqRecorde n1 
+    hPutStr arqRecorde " Pontuacao: "
+    hPutStrLn arqRecorde p1
+    hFlush arqRecorde
+    hClose arqRecorde
+  else buscaValor pn nn maior
+
+
+
+
+
