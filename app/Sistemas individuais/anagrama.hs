@@ -42,13 +42,11 @@ colorWord (head:body) (cabeca:corpo) (topo:pilha) position = do
 criaLista:: [String] -> String -> [String]
 criaLista words tentativa = [word | word <- words, word /= tentativa]
 
-checkWordIsCorrect :: String -> [String] -> IO ()
-checkWordIsCorrect _ [] = do
-  putStrLn $ ""
-  return()
+checkWordIsCorrect :: String -> [String] -> Bool
+checkWordIsCorrect _ [] = False
 checkWordIsCorrect tentativa (word : words) = 
-  if tentativa == word then do
-    putStrLn $ " Voce acertou a palavra " ++ show (takeI (length words)) ++ "\n" ++ " " ++ word
+  if tentativa == word then True
+    -- putStrLn $ " Voce acertou a palavra " ++ show (takeI (length words)) ++ "\n" ++ " " ++ word
     -- drop (takeI (length words - 1)) words
     -- colorWord tentativa word word (takeI (length words))
   else do 
@@ -79,7 +77,7 @@ anagrama :: Int -> [String] -> IO()
 
 
 
-anagrama pontos xs = do
+anagrama pontos xs  = do
   putStrLn $ ""
   putStrLn $ " Forme o maior número possível de palavras usando as letras disponíveis."
   putStrLn $ ""
@@ -89,8 +87,11 @@ anagrama pontos xs = do
   putStrLn $ " _____________________________________________"
   
   if length tentativa > 0 then do
-    checkWordIsCorrect tentativa xs
-    anagrama pontos xs
+    if checkWordIsCorrect tentativa xs 
+      then do 
+        putStrLn $ " Voce acertou a palavra " ++ "\n" ++ " " ++ tentativa
+        anagrama pontos (criaLista xs tentativa)
+    else putStrLn $ "else" 
   else anagrama pontos xs
   
 --Customização da palavra
@@ -149,7 +150,7 @@ recordLetreiro = do
 iteraText:: [String] -> String
 iteraText [] = ""
 iteraText (x:xs) = if length xs >= 0 then
-  "   Palavra " ++ show (takeI (length xs)) ++ " " ++ addSpace (hiddenWord x) ++ "\n" ++ iteraText xs
+  "   " ++ addSpace (hiddenWord x) ++ "\n" ++ iteraText xs
   else ""
 
 texts :: Int -> [String] -> IO()
@@ -158,6 +159,7 @@ texts pontos words = do
   putStrLn $ ""
   putStrLn $ " Tentativas restantes: ATE ACERTAR"
   putStrLn $ ""
+  putStrLn $ " Palavras restantes:"
   -- putStrLn $ " Pontos: " ++ show pontos
   putStrLn $ ""
   putStrLn $ iteraText $ words
