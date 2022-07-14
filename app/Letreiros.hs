@@ -31,6 +31,17 @@ startTermoo = do
   putStrLn " |        ▀   ▀▀▀ ▀ ▀ ▀  ▀  ▀ ▀▀▀▀ ▀▀▀▀      |"
   putStrLn " |___________________________________________|"
 
+startanagrama :: IO()
+startanagrama = do
+  system "cls"
+  putStrLn " +______________________________________________________+ "
+  putStrLn " |                                                       |" 
+  putStrLn " |      █▀▀█ █▀█ █ █▀▀█ █▀▀▀ █▀▀█ █▀▀█ █▀▄ ▄▀█ █▀▀█      |"
+  putStrLn " |      █▄▄█ █ █ █ █▄▄█ █ ▄▄ █▀▀▄ █▄▄█ █  █  █ █▄▄█      |"
+  putStrLn " |      █  █ █ █▄█ █  █ █▄▄█ █  █ █  █ █  █  █ █  █      |"
+  putStrLn " |_______________________________________________________|"
+
+
 menuLetreiro :: IO()
 menuLetreiro = do
   system "cls"
