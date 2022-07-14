@@ -18,7 +18,13 @@ menusController op = do
 --recordesController :: Char -> IO()
 
 --jogosController :: Char -> IO()
-
+--jogosController op = do
+  --if op == '1' then mainTermo
+  --else if op == '2' then mainAnagrama
+  --else if op == '3' then creditos
+  --else if op == '0' then return() 
+  --else do
+    --putStrLn $ "Opção invalida insira uma das opções"
 
 
 --Textos
@@ -36,7 +42,7 @@ menuJogos = do
   putStrLn $ "Digite 1: JOGAR MODO ANAGRAMA"
   putStrLn $ "Digite 2: JOGAR MODO TERMOO"
   putStrLn $ "Digite 0: VOLTAR"
-  op <- getChar
+  --op <- getChar
   --jogosController 
   
 
