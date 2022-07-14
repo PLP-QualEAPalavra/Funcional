@@ -2,12 +2,13 @@
 import System.Process
 import System.IO
 import System.Directory
+import Data.Char (toUpper)
 
 --anagrama
 main :: IO()
 main = do
   startanagrama
-  dBase <- readFileLines "palavras.txt" 
+  dBase <- readFileLines "../palavras.txt" 
   anagrama 150 dBase
 
 takeI:: Int -> Int
@@ -38,6 +39,9 @@ colorWord (head:body) (cabeca:corpo) (topo:pilha) position = do
     putStr $ " \ESC[90m" ++ [head] ++ "\ESC[0m"
     colorWord body corpo (topo:pilha) position
 
+criaLista:: [String] -> String -> [String]
+criaLista words tentativa = [word | word <- words, word /= tentativa]
+
 checkWordIsCorrect :: String -> [String] -> IO ()
 checkWordIsCorrect _ [] = do
   putStrLn $ ""
@@ -45,29 +49,42 @@ checkWordIsCorrect _ [] = do
 checkWordIsCorrect tentativa (word : words) = 
   if tentativa == word then do
     putStrLn $ " Voce acertou a palavra " ++ show (takeI (length words)) ++ "\n" ++ " " ++ word
-    colorWord tentativa word word (takeI (length words))
+    -- drop (takeI (length words - 1)) words
+    -- colorWord tentativa word word (takeI (length words))
   else do 
     checkWordIsCorrect tentativa words
-    colorWord tentativa word word (takeI (length words))
+    -- colorWord tentativa word word (takeI (length words))
 
 
-teste :: String -> String
-teste [x] = [x]
-teste (h:tail) = [h] ++ " " ++ teste tail
+-- upper :: String -> String
+-- upper [x] = toUpper [x]
+-- upper (w:ws) = toUpper (ws) ++ upper ws
 
-showLetters :: [String] -> IO ()
-showLetters [] = return ()
-showLetters (word: words) = do 
-  putStrLn $ teste word
-  showLetters words
+reverser :: String -> String
+reverser [x] = [x]
+reverser word = reverse word
+
+joinWord :: [String] -> String
+joinWord [] = ""
+joinWord (w:ws) = reverser (w) ++ joinWord ws 
+
+removeDup :: String -> String
+removeDup [] = [] 
+removeDup [a] = [a] 
+removeDup (x:xs) = x:(removeDup $ filter (/=x) xs)
 
 anagrama :: Int -> [String] -> IO()
 -- anagrama pontos [] = do
   --  record pontos
 
+
+
 anagrama pontos xs = do
+  putStrLn $ ""
+  putStrLn $ " Forme o maior número possível de palavras usando as letras disponíveis."
+  putStrLn $ ""
+  putStrLn $ " " ++ addSpace (removeDup (joinWord xs))
   texts pontos xs
-  showLetters xs
   tentativa <- getLine :: IO String
   putStrLn $ " _____________________________________________"
   
