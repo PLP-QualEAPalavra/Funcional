@@ -1,5 +1,10 @@
-carro
-pesos
-diaria
-sla
-outra
+lavar
+comer
+secar
+falar
+pular
+andar
+ouvir
+ligar
+olhar
+pagar
