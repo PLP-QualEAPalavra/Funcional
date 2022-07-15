@@ -5,6 +5,9 @@ import System.Exit
 import System.Process
 import System.Directory
 import Data.Char (toUpper)
+import Data.Time.Clock (diffUTCTime)
+import Data.Time (getCurrentTime)
+import Data.Time
 
 main :: IO()
 main = do
@@ -229,7 +232,8 @@ mainAnagrama :: IO()
 mainAnagrama = do
   Letreiros.startanagrama
   dBase <- readFileLines "anagrama.txt" 
-  anagrama 10 dBase 1
+  timeAtual <- getCurrentTime
+  anagrama 10 dBase 1 timeAtual
 
 takeI:: Int -> Int
 takeI 4 = 1;
@@ -245,17 +249,8 @@ checkWordIsCorrect :: String -> [String] -> Bool
 checkWordIsCorrect _ [] = False
 checkWordIsCorrect tentativa (word : words) = 
   if tentativa == word then True
-    -- putStrLn $ " Voce acertou a palavra " ++ show (takeI (length words)) ++ "\n" ++ " " ++ word
-    -- drop (takeI (length words - 1)) words
-    -- colorWord tentativa word word (takeI (length words))
   else do 
     checkWordIsCorrect tentativa words
-    -- colorWord tentativa word word (takeI (length words))
-
-
--- upper :: String -> String
--- upper [x] = toUpper [x]
--- upper (w:ws) = toUpper (ws) ++ upper ws
 
 reverser :: String -> String
 reverser [x] = [x]
@@ -270,13 +265,24 @@ removeDup [] = []
 removeDup [a] = [a] 
 removeDup (x:xs) = x:(removeDup $ filter (/=x) xs)
 
-anagrama :: Int -> [String] -> Int -> IO()
-anagrama 0 _ _ = do
+anagrama :: Int -> [String] -> Int -> UTCTime -> IO()
+anagrama 0 _ _ _ = do
+  putStrLn $ ""
+  putStrLn $ "Pontuação zerada!"
+  putStrLn $ ""
+
   Letreiros.gameOver
-anagrama pontos [] _ = do
+anagrama pontos [] _ _ = do
    Letreiros.acerto
 
-anagrama pontos xs mutiplicador = do
+anagrama pontos xs mutiplicador time = do
+  timeAtual <- getCurrentTime
+  let diferenca = realToFrac (diffUTCTime timeAtual time)
+  if diferenca > 600.00
+    then do 
+      putStrLn $ "Acabou o tempo"
+      Letreiros.timeIsOver :: IO()
+  else do
   putStrLn $ ""
   putStrLn $ " Forme o maior número possível de palavras usando as letras disponíveis."
   putStrLn $ ""
@@ -288,25 +294,13 @@ anagrama pontos xs mutiplicador = do
   if length tentativa >= 1 then do
     if checkWordIsCorrect tentativa xs 
       then do 
-        putStrLn $ " Voce acertou a palavra " ++ "\n" ++ " " ++ tentativa
-        anagrama (pontos+(10*mutiplicador)) (criaLista xs tentativa) (mutiplicador + 1)
-    else anagrama (pontos-1) xs 1
+        putStrLn $ ""
+        putStrLn $ " VOCE ACERTOU A PALAVRA " ++ "\n" ++ " " ++ tentativa
+        anagrama (pontos+(10*mutiplicador)) (criaLista xs tentativa) (mutiplicador + 1) time
+    else anagrama (pontos-1) xs 1 time
   else 
-    anagrama pontos xs 1
+    anagrama pontos xs 1 time
   
--- --Customização da palavra
--- addSpace:: [Char] -> [Char]
--- addSpace xs = if length xs == 1
---               then xs
---               else take (length xs - (length xs - 1)) xs ++ " " ++ addSpace (drop 1 xs)
-
--- hiddenWord :: [Char] -> [Char]
--- hiddenWord xs = ['_' | length xs /= 0, x <- xs];
-
--- --Pegar palavras
--- readFileLines :: FilePath -> IO [String]
--- readFileLines = fmap lines.readFile
-
 iteraText:: [String] -> String
 iteraText [] = ""
 iteraText (x:xs) = if length xs >= 0 then
@@ -322,10 +316,12 @@ textsAnagrama pontos words = do
   putStrLn $ " Tentativas restantes: ATE ACERTAR"
   putStrLn $ ""
   putStrLn $ " Palavras restantes:"
-  -- putStrLn $ " Pontos: " ++ show pontos
   putStrLn $ ""
   putStrLn $ iteraText $ words
   putStrLn $ ""
   putStr $ " Insira Palavra:  "
+
+
+
 
 
