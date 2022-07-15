@@ -87,7 +87,8 @@ menusController op = do
 
 recordesController :: Char -> IO()
 recordesController op = do
-    if op == '2' then mainRecord
+    if op == '1' then mainRecordAnagrama 
+    else if op == '2' then mainRecord
     else if op == '0' then menuText
     else do
         putStrLn $ "Opção invalida insira uma das opções"
@@ -98,8 +99,6 @@ jogosController :: Char -> IO()
 jogosController op = do
   if op == '1' then mainAnagrama
   else if op == '2' then mainTermoo
-  --else if op == '2' then mainAnagrama
-  --else if op == '3' then creditos
   else if op == '0' then menuText
   else do
     putStrLn $ "Opção invalida insira uma das opções"
@@ -184,7 +183,6 @@ record pontos = do
   hFlush recordInt
   hClose recordInt
 
-
 --Menssagens do jogo
 texts :: Int -> Int -> String -> IO()
 texts life pontos word = do
@@ -204,7 +202,120 @@ erroTamanhoPalavra = do
   putStrLn $ ""
   putStrLn $ "\ESC[31mERRO: Tamanho de palavra incorreto\ESC[0m"
 
---Recordes
+
+--anagrama
+mainAnagrama :: IO()
+mainAnagrama = do
+  Letreiros.startAnagrama
+  dBase <- readFileLines "anagrama.txt" 
+  timeAtual <- getCurrentTime
+  anagrama 10 dBase 1 timeAtual
+
+takeI:: Int -> Int
+takeI 4 = 1;
+takeI 3 = 2;
+takeI 2 = 3;
+takeI 1 = 4;
+takeI 0 = 5;
+
+criaLista:: [String] -> String -> [String]
+criaLista words tentativa = [word | word <- words, word /= tentativa]
+
+checkWordIsCorrect :: String -> [String] -> Bool
+checkWordIsCorrect _ [] = False
+checkWordIsCorrect tentativa (word : words) = 
+  if tentativa == word then True
+  else do 
+    checkWordIsCorrect tentativa words
+
+reverser :: String -> String
+reverser [x] = [x]
+reverser word = reverse word
+
+joinWord :: [String] -> String
+joinWord [] = ""
+joinWord (w:ws) = reverser (w) ++ joinWord ws 
+
+removeDup :: String -> String
+removeDup [] = [] 
+removeDup [a] = [a] 
+removeDup (x:xs) = x:(removeDup $ filter (/=x) xs)
+
+anagrama :: Int -> [String] -> Int -> UTCTime -> IO()
+anagrama 0 _ _ _ = do
+  putStrLn $ ""
+  putStrLn $ "Pontuação zerada!"
+  putStrLn $ ""
+  Letreiros.gameOver
+  putStrLn " _____________________________________________" 
+  putStrLn "   Pressione enter para Voltar para o menu!" 
+  putStrLn " _____________________________________________"
+  putStr " "
+  op <- getChar
+  menuText
+anagrama pontos [] _ _ = do
+   Letreiros.acerto
+   recordeAnagrama pontos
+anagrama pontos xs mutiplicador time = do
+  timeAtual <- getCurrentTime
+  let diferenca = realToFrac (diffUTCTime timeAtual time)
+  if diferenca > 600.00 then do 
+      putStrLn $ "Acabou o tempo"
+      Letreiros.timeIsOver :: IO()
+      recordeAnagrama pontos
+  else do
+    putStrLn $ ""
+    putStrLn $ " Forme o maior número possível de palavras usando as letras disponíveis."
+    putStrLn $ ""
+    putStrLn $ " " ++ addSpace (removeDup (joinWord xs))
+    textsAnagrama pontos xs
+    tentativa <- getLine :: IO String
+    putStrLn $ " _____________________________________________"
+
+    if length tentativa >= 1 then do
+      if checkWordIsCorrect tentativa xs then do 
+          putStrLn $ ""
+          putStrLn $ " VOCE ACERTOU A PALAVRA " ++ "\n" ++ " " ++ tentativa
+          anagrama (pontos+(10*mutiplicador)) (criaLista xs tentativa) (mutiplicador + 1) time
+      else anagrama (pontos-1) xs 1 time
+    else 
+      anagrama pontos xs 1 time
+  
+iteraText:: [String] -> String
+iteraText [] = ""
+iteraText (x:xs) = if length xs >= 0 then
+  "   " ++ addSpace (hiddenWord x) ++ "\n" ++ iteraText xs
+  else ""
+
+textsAnagrama :: Int -> [String] -> IO()
+textsAnagrama pontos words = do
+  putStrLn $ " _____________________________________________"
+  putStrLn $ ""
+  putStrLn $ " Pontos: " ++ show pontos
+  putStrLn $ ""
+  putStrLn $ " Tentativas restantes: ATE ACERTAR"
+  putStrLn $ ""
+  putStrLn $ " Palavras restantes:"
+  putStrLn $ ""
+  putStrLn $ iteraText $ words
+  putStrLn $ ""
+  putStr $ " Insira Palavra:  "
+
+recordeAnagrama :: Int -> IO()
+recordeAnagrama pontos = do 
+  putStrLn $ ""
+  putStr $ " Insira o seu nome:"
+  nomePlayer <- getLine :: IO String
+  recordStr <- openFile "recordAnagramaName.txt" AppendMode
+  hPutStr recordStr nomePlayer
+  hFlush recordStr
+  hClose recordStr
+  recordInt <- openFile "recordAnagramaPontos.txt" AppendMode
+  hPutStrLn recordInt (show pontos)
+  hFlush recordInt
+  hClose recordInt 
+
+--RecordesTermoo
 mainRecord:: IO()
 mainRecord = do 
     Letreiros.recordLetreiro
@@ -217,6 +328,20 @@ mainRecord = do
     putStr $ " "
     op <- getChar
     recordesController op
+
+mainRecordAnagrama:: IO()
+mainRecordAnagrama = do 
+    Letreiros.recordLetreiro
+    arqNames <- readFileLines "recordAnagramaName.txt"
+    arqPontos <- readFileLines "recordAnagramaPontos.txt"
+    laco1 arqNames arqPontos $ ordena (converIntList arqPontos)
+    putStrLn $ " _____________________________________________" 
+    putStrLn $ "         Pressione enter para voltar!" 
+    putStrLn $ " _____________________________________________"
+    putStr $ " "
+    op <- getChar
+    recordesController op
+
 
 converIntList :: [String] -> [Int]
 converIntList [] = []
@@ -279,96 +404,3 @@ buscaValor (p1:pn) (n1:nn) maior = do
     hClose arqRecorde
   else buscaValor pn nn maior
 
---anagrama
-mainAnagrama :: IO()
-mainAnagrama = do
-  Letreiros.startAnagrama
-  dBase <- readFileLines "anagrama.txt" 
-  timeAtual <- getCurrentTime
-  anagrama 10 dBase 1 timeAtual
-
-takeI:: Int -> Int
-takeI 4 = 1;
-takeI 3 = 2;
-takeI 2 = 3;
-takeI 1 = 4;
-takeI 0 = 5;
-
-criaLista:: [String] -> String -> [String]
-criaLista words tentativa = [word | word <- words, word /= tentativa]
-
-checkWordIsCorrect :: String -> [String] -> Bool
-checkWordIsCorrect _ [] = False
-checkWordIsCorrect tentativa (word : words) = 
-  if tentativa == word then True
-  else do 
-    checkWordIsCorrect tentativa words
-
-reverser :: String -> String
-reverser [x] = [x]
-reverser word = reverse word
-
-joinWord :: [String] -> String
-joinWord [] = ""
-joinWord (w:ws) = reverser (w) ++ joinWord ws 
-
-removeDup :: String -> String
-removeDup [] = [] 
-removeDup [a] = [a] 
-removeDup (x:xs) = x:(removeDup $ filter (/=x) xs)
-
-anagrama :: Int -> [String] -> Int -> UTCTime -> IO()
-anagrama 0 _ _ _ = do
-  putStrLn $ ""
-  putStrLn $ "Pontuação zerada!"
-  putStrLn $ ""
-
-  Letreiros.gameOver
-anagrama pontos [] _ _ = do
-   Letreiros.acerto
-
-anagrama pontos xs mutiplicador time = do
-  timeAtual <- getCurrentTime
-  let diferenca = realToFrac (diffUTCTime timeAtual time)
-  if diferenca > 600.00
-    then do 
-      putStrLn $ "Acabou o tempo"
-      Letreiros.timeIsOver :: IO()
-  else do
-  putStrLn $ ""
-  putStrLn $ " Forme o maior número possível de palavras usando as letras disponíveis."
-  putStrLn $ ""
-  putStrLn $ " " ++ addSpace (removeDup (joinWord xs))
-  textsAnagrama pontos xs
-  tentativa <- getLine :: IO String
-  putStrLn $ " _____________________________________________"
-
-  if length tentativa >= 1 then do
-    if checkWordIsCorrect tentativa xs 
-      then do 
-        putStrLn $ ""
-        putStrLn $ " VOCE ACERTOU A PALAVRA " ++ "\n" ++ " " ++ tentativa
-        anagrama (pontos+(10*mutiplicador)) (criaLista xs tentativa) (mutiplicador + 1) time
-    else anagrama (pontos-1) xs 1 time
-  else 
-    anagrama pontos xs 1 time
-  
-iteraText:: [String] -> String
-iteraText [] = ""
-iteraText (x:xs) = if length xs >= 0 then
-  "   " ++ addSpace (hiddenWord x) ++ "\n" ++ iteraText xs
-  else ""
-
-textsAnagrama :: Int -> [String] -> IO()
-textsAnagrama pontos words = do
-  putStrLn $ " _____________________________________________"
-  putStrLn $ ""
-  putStrLn $ " Pontos: " ++ show pontos
-  putStrLn $ ""
-  putStrLn $ " Tentativas restantes: ATE ACERTAR"
-  putStrLn $ ""
-  putStrLn $ " Palavras restantes:"
-  putStrLn $ ""
-  putStrLn $ iteraText $ words
-  putStrLn $ ""
-  putStr $ " Insira Palavra:  "
