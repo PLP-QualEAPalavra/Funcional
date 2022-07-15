@@ -1,4 +1,6 @@
 import qualified Letreiros
+import qualified RegrasAnagramas
+import qualified RegrasTermoo
 import Control.Exception
 import System.IO
 import System.Exit
@@ -101,6 +103,8 @@ jogosController op = do
 --Termoo
 mainTermoo :: IO()
 mainTermoo = do
+  RegrasTermoo.regrasTermoo
+  op <- getChar
   Letreiros.startTermoo
   dBase <- readFileLines "palavras.txt" 
   termoo 5 150 dBase
