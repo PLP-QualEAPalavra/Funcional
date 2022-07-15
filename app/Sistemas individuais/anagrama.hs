@@ -9,7 +9,7 @@ main :: IO()
 main = do
   startanagrama
   dBase <- readFileLines "../palavras.txt" 
-  anagrama 150 dBase
+  anagrama 10 dBase 1
 
 takeI:: Int -> Int
 takeI 4 = 1;
@@ -71,13 +71,13 @@ removeDup [] = []
 removeDup [a] = [a] 
 removeDup (x:xs) = x:(removeDup $ filter (/=x) xs)
 
-anagrama :: Int -> [String] -> IO()
--- anagrama pontos [] = do
-  --  record pontos
+anagrama :: Int -> [String] -> Int -> IO()
+anagrama pontos [] _ = do
+   acerto
 
 
 
-anagrama pontos xs  = do
+anagrama pontos xs mutiplicador = do
   putStrLn $ ""
   putStrLn $ " Forme o maior número possível de palavras usando as letras disponíveis."
   putStrLn $ ""
@@ -85,14 +85,15 @@ anagrama pontos xs  = do
   texts pontos xs
   tentativa <- getLine :: IO String
   putStrLn $ " _____________________________________________"
-  
-  if length tentativa > 0 then do
+
+  if length tentativa >= 1 then do
     if checkWordIsCorrect tentativa xs 
       then do 
         putStrLn $ " Voce acertou a palavra " ++ "\n" ++ " " ++ tentativa
-        anagrama pontos (criaLista xs tentativa)
-    else putStrLn $ "else" 
-  else anagrama pontos xs
+        anagrama (pontos+(10*mutiplicador)) (criaLista xs tentativa) (mutiplicador + 1)
+    else anagrama (pontos-1) xs 1
+  else 
+    anagrama pontos xs 1
   
 --Customização da palavra
 addSpace:: [Char] -> [Char]
@@ -157,6 +158,8 @@ texts :: Int -> [String] -> IO()
 texts pontos words = do
   putStrLn $ " _____________________________________________"
   putStrLn $ ""
+  putStrLn $ " Pontos: " ++ show pontos
+  putStrLn $ ""
   putStrLn $ " Tentativas restantes: ATE ACERTAR"
   putStrLn $ ""
   putStrLn $ " Palavras restantes:"
@@ -165,6 +168,19 @@ texts pontos words = do
   putStrLn $ iteraText $ words
   putStrLn $ ""
   putStr $ " Insira Palavra:  "
+
+--Record
+record :: Int -> IO()
+record pontos = do 
+  putStrLn $ ""
+  putStr $ " Insira o seu nome:"
+  nomePlayer <- getLine :: IO String
+  recordT <- openFile "recordT.txt" AppendMode
+  hPutStr recordT nomePlayer
+  hPutStr recordT ", "
+  hPutStrLn recordT (show pontos)
+  hFlush recordT
+  hClose recordT
 
 --tratamento de erro
 erroTamanhoPalavra:: IO()

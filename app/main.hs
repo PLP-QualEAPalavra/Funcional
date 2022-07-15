@@ -1,4 +1,6 @@
 import qualified Letreiros
+import qualified RegrasAnagramas
+import qualified RegrasTermoo
 import Control.Exception
 import System.IO
 import System.Exit
@@ -106,6 +108,8 @@ jogosController op = do
 --Termoo
 mainTermoo :: IO()
 mainTermoo = do
+  RegrasTermoo.regrasTermoo
+  op <- getChar
   Letreiros.startTermoo
   dBase <- readFileLines "palavras.txt" 
   termoo 5 150 dBase
@@ -203,9 +207,57 @@ erroTamanhoPalavra = do
 --Recordes
 mainRecord:: IO()
 mainRecord = do 
+    Letreiros.recordLetreiro
     arqNames <- readFileLines "recordTermoName.txt"
     arqPontos <- readFileLines "recordTermoPontos.txt"
-    buscaValor arqPontos arqNames $ getMaiorRecord arqPontos
+    laco1 arqNames arqPontos $ ordena (converIntList arqPontos)
+    putStrLn $ " _____________________________________________" 
+    putStrLn $ "         Pressione enter para voltar!" 
+    putStrLn $ " _____________________________________________"
+    putStr $ " "
+    op <- getChar
+    recordesController op
+
+converIntList :: [String] -> [Int]
+converIntList [] = []
+converIntList (x1:xn) = [read x1::Int] ++ converIntList xn
+
+getMaior :: [Int] -> Int
+getMaior [x] = x
+getMaior (x1:xn) = 
+  if x1 > getMaior xn then x1
+  else getMaior xn
+
+remove_maior :: [Int] -> [Int]
+remove_maior [] = []
+remove_maior (x1:xn) = 
+  if x1 == (getMaior $ x1:xn) then xn
+  else (x1:remove_maior xn)
+
+aux_ordena :: [Int] -> [Int] -> [Int]
+aux_ordena lista_ordenada [] = lista_ordenada
+aux_ordena lista_ordenada (x1:xn) = aux_ordena (lista_ordenada++[getMaior (x1:xn)]) (remove_maior(x1:xn))
+
+
+ordena :: [Int] -> [Int] 
+ordena lista = aux_ordena [] lista
+
+laco1 :: [String] -> [String] -> [Int] -> IO()
+laco1 listaN listaP []   = return()
+laco1 (n1:nn) (p1:pn) (i1:is)  = do
+  laco2 (n1:nn) (p1:pn) i1
+  laco1 (n1:nn) (p1:pn) is 
+
+laco2 :: [String] -> [String] -> Int -> IO()
+laco2 [] [] mPonto = return()
+laco2 (n1:nn) (p1:pn) mPonto = do
+  let valor = read p1 :: Int
+  if valor == mPonto then do 
+    putStr "  Jogador: "
+    putStr  n1
+    putStr  "  | Pontuacao: "
+    putStrLn p1
+  else laco2 nn pn mPonto
 
 getMaiorRecord :: [String] -> Int
 getMaiorRecord [y] = read y::Int
@@ -230,7 +282,7 @@ buscaValor (p1:pn) (n1:nn) maior = do
 --anagrama
 mainAnagrama :: IO()
 mainAnagrama = do
-  Letreiros.startanagrama
+  Letreiros.startAnagrama
   dBase <- readFileLines "anagrama.txt" 
   timeAtual <- getCurrentTime
   anagrama 10 dBase 1 timeAtual
@@ -320,8 +372,3 @@ textsAnagrama pontos words = do
   putStrLn $ iteraText $ words
   putStrLn $ ""
   putStr $ " Insira Palavra:  "
-
-
-
-
-
