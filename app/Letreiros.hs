@@ -43,7 +43,6 @@ startTermoo = do
   putStrLn " |        ▀   ▀▀▀ ▀ ▀ ▀  ▀  ▀ ▀▀▀▀ ▀▀▀▀      |"
   putStrLn " |___________________________________________|"
 
-
 startAnagrama :: IO()
 startAnagrama = do
   system "cls"
