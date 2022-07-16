@@ -1,0 +1,10 @@
+lavar
+comer
+secar
+falar
+pular
+andar
+ouvir
+ligar
+olhar
+pagar
