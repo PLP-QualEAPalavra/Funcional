@@ -26,7 +26,26 @@ startTermo():-
     open("arquivos/palavrasTermoo.txt", read, Dados),
     getWords(Dados,Palavras),!,
     close(Dados), 
-    termo(Palavras, 5, 150).
+    termo(Palavras, 5, 150),
+    menuLabel(), menuMain().
+
+
+termo([_|_], 0, Pontos):- recordLabel(),menuSaveRecordTermo(Pontos).
+termo([Palavra1|[]], Vidas, Pontos):- 
+    writeln(' ____________________________'),
+    write(' Tentativas restantes: '), writeln(Vidas), 
+    nl,
+    write(' Pontos: '), writeln(Pontos),
+    nl,
+    write(' Palavra: '),
+    string_chars(Palavra1, PalavraSeparada),
+    spacesWord(PalavraSeparada),
+    writeln(' ____________________________'),
+    writeln(' Tentativa: '), write(' '),read(Entrada), 
+    (Entrada == Palavra1 -> recordLabel(),menuSaveRecordTermo(Pontos) ;
+    string_chars(Entrada, EntradaSeparada), 
+    line(), write('Tentativa Anterior:'),checkWord(EntradaSeparada, PalavraSeparada, PalavraSeparada), 
+    NP is Pontos - 25, NV is Vidas - 1, termo([Palavra1|PalavrasN], NV, NP)).
 
 termo([Palavra1|PalavrasN], Vidas, Pontos) :-
     writeln(' ____________________________'),
@@ -35,14 +54,14 @@ termo([Palavra1|PalavrasN], Vidas, Pontos) :-
     write(' Pontos: '), writeln(Pontos),
     nl,
     write(' Palavra: '),
-    string_chars(Palavra1, PalavrasSeparadas),
-    spacesWord(PalavrasSeparadas),
+    string_chars(Palavra1, PalavraSeparada),
+    spacesWord(PalavraSeparada),
     writeln(' ____________________________'),
-    (Vidas > 0 -> 
-    writeln(' Tentativa: '), write(' '),read(Entrada),
-    (Entrada == Palavra1 -> Npontos is Pontos + 150, termo(PalavrasN, 5, Npontos) ; string_chars(Entrada, EntradaSeparada),
-    checkWord(EntradaSeparada, PalavrasSeparadas, PalavrasSeparadas)), Npontos is pontos - 25, Nvida is vida - 1, termo([Palavra1|PalavrasN], Nvida, Npontos)).
-    
+    writeln(' Tentativa: '), write(' '),read(Entrada), 
+    (Entrada == Palavra1 -> NP is Pontos + 150, termo(PalavrasN, 5, NP) ;
+    string_chars(Entrada, EntradaSeparada), line(),
+    write(' tentativa anterior:'),checkWord(EntradaSeparada, PalavraSeparada, PalavraSeparada), 
+    NP is Pontos - 25, NV is Vidas - 1, termo([Palavra1|PalavrasN], NV, NP)).
 
 
 

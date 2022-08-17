@@ -35,3 +35,11 @@ menuCredits():-
     writeln(' ____________________________'),
     writeln(' 1 - voltar'),
     writeln(' Insira a opcao: '), write(' '), read(Op),waysCredit(Op).
+
+menuSaveRecordTermo(Pontos):-
+    writeln(' ____________________________'),
+    writeln(' Insira seu nome:'), write(' '),
+    read(Nome),
+    open('arquivos/recordTermo.txt', append, Ponto),
+    writeln(Ponto,[(Nome, Pontos)]),
+    close(Ponto),!.

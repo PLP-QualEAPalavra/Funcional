@@ -28,3 +28,5 @@ recordLabel:-
     writeln('|          RECORDES          |'),
     writeln('|____________________________|').
 
+line:-
+    writeln(' ____________________________').   
