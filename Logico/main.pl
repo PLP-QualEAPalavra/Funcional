@@ -35,11 +35,13 @@ termo([Palavra1|PalavrasN], Vidas, Pontos) :-
     write(' Pontos: '), writeln(Pontos),
     nl,
     write(' Palavra: '),
-    string_chars(Palavra1, Chars),
-    spacesWord(Chars),
+    string_chars(Palavra1, PalavrasSeparadas),
+    spacesWord(PalavrasSeparadas),
     writeln(' ____________________________'),
+    (Vidas > 0 -> 
     writeln(' Tentativa: '), write(' '),read(Entrada),
-    (Entrada == Palavra1 -> Npontos is Pontos + 150,termo(PalavrasN, 5, Npontos) ; checkWord(Entrada, Chars, Palavra1).),
+    (Entrada == Palavra1 -> Npontos is Pontos + 150, termo(PalavrasN, 5, Npontos) ; string_chars(Entrada, EntradaSeparada),
+    checkWord(EntradaSeparada, PalavrasSeparadas, PalavrasSeparadas)), Npontos is pontos - 25, Nvida is vida - 1, termo([Palavra1|PalavrasN], Nvida, Npontos)).
     
 
 
