@@ -1,4 +1,5 @@
 menuMain():-
+    write('\33[H\e[2J'),
     writeln(' ____________________________'),
     writeln(' 1 - Jogar'),
     writeln(' 2 - Recordes'),
