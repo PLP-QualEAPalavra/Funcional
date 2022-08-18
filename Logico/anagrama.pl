@@ -9,7 +9,8 @@ verify(TimeDif):-(TimeDif >= 600,
 
 %DerrotaPorPontosZerados
 anagrama(_, _, Pontos, _):-%TO DO
-    Pontos = 0,
+    Pontos is 0,
+    nl,
     writeln("DERROTA"),
     writeln("# PONTUAÇÃO ZERADA #").
 
