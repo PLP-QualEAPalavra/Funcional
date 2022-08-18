@@ -13,7 +13,7 @@ waysMain(3):- creditLabel(),menuCredits().
 waysMain(4):- halt.
 
 waysGame(1):- termoLabel(), startTermo().
-waysGame(2):- anagramaLabel(), mainAnagrama().   
+waysGame(2):- anagramaLabel(), startAnagrama().   
 waysGame(3):- menuLabel(), menuMain(). 
 
 waysRecords(1):- recordTermo().
@@ -28,6 +28,26 @@ startTermo():-
     close(Dados), 
     termo(Palavras, 5, 150),
     menuLabel(), menuMain().
+
+startAnagrama():-
+    open("arquivos/palavrasAnagrama.txt", read, Dados),
+    getWords(Dados,Termos),!,
+    close(Dados),
+    terms_to_strings(Termos,Palavras),
+    get_time(Tempo),
+    anagrama(Palavras,Palavras, 10,Tempo),
+    menuLabel(), menuMain().
+
+
+%Inicia Anagrama e escolhe palavras da lista do txt
+anagrama([],_,Pontos):- 
+    %lerTxt(ListaBanco),
+    open("arquivos/palavrasTermoo.txt",read,Dados),
+    getWords(Dados,Termos),!,
+    close(Dados),
+    terms_to_strings(Termos,ListaBanco),
+    palavras(ListaBanco,5,ListaPalavras),
+    anagrama(ListaPalavras,ListaPalavras,Pontos).
 
 
 termo([_|_], 0, Pontos):- recordLabel(),menuSaveRecordTermo(Pontos).
@@ -62,6 +82,7 @@ termo([Palavra1|PalavrasN], Vidas, Pontos) :-
     string_chars(Entrada, EntradaSeparada), line(),
     write(' tentativa anterior:'),checkWord(EntradaSeparada, PalavraSeparada, PalavraSeparada), 
     NP is Pontos - 25, NV is Vidas - 1, termo([Palavra1|PalavrasN], NV, NP)).
+
 
 
 
