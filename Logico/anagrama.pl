@@ -25,7 +25,7 @@ anagrama(_,[],Pontos):-
     menuSaveRecordAnagrama(Pontos),!.
 
 %Anagrama
-anagrama(ListaPalavras,ListaAcertadas,Pontos):-
+anagrama(ListaPalavras,ListaAcertadas,Pontos,Tempo):-
     Pontos \= 0,
     embaralha(ListaAcertadas,Embaralhado),
     write("Pontos: "),writeln(Pontos),
@@ -37,12 +37,12 @@ anagrama(ListaPalavras,ListaAcertadas,Pontos):-
     %acertou
     subtract(ListaAcertadas,[X],NovaLista),
     NovoPontos is Pontos + 5,
-    anagrama(ListaPalavras,NovaLista,NovoPontos);
+    anagrama(ListaPalavras,NovaLista,NovoPontos,Tempo);
     
     %errou
     writeln("Errou!"),
     NovoPontos is Pontos - 1,
-    anagrama(ListaPalavras,ListaAcertadas,NovoPontos)
+    anagrama(ListaPalavras,ListaAcertadas,NovoPontos,Tempo)
     )
     .
     
@@ -58,7 +58,7 @@ terms_to_strings([T|X],[S|Y]):-
 
 %retorna N elementos diferentes de uma lista
 palavras([],_,_).
-palavras(L,1,R) :- R = [X], random_member(X,L).
+palavras(L,1,R) :- R = [X],random_member(X,L).
 palavras(L,N,R) :- R = [X|Y], random_member(X,L),
     N1 is N-1,
     select(X,L,L1),
@@ -75,7 +75,7 @@ letrasUpper([X|Y],[X2|Y1]) :-
 %embaralha strings em uma string sem repetidos 
 embaralha(L,R) :- junta(L,T),
     list_to_set(T,T1),
-    random_permutation(T1,R).
+    randompermutation(T1,R).
 
 %junta strings em lista de atomos
 junta([],[]).
@@ -95,7 +95,7 @@ writePalavras(L,X):- length(L,Y), not(X=Y),nth0(X,L,R),X1 is X+1,
     writeSecret(R), writeln(""),
     writePalavras(L,X1).
 
-%writeEmbaralho
+%write embaralho
 writeEmbaralho([]) :- writeln(" ").
 writeEmbaralho([X|Y]):- write(X),write(" "),
     writeEmbaralho(Y).

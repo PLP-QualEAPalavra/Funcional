@@ -89,6 +89,8 @@ termo([Palavra1|PalavrasN], Vidas, Pontos) :-
 
          
 
+=======
+>>>>>>> 287b6170bf7508ef8522a9fa5893e685cbf4fe3a
     
 
 
