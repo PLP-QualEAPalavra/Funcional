@@ -29,6 +29,12 @@ startTermo():-
     termo(Palavras, 5, 150),
     menuLabel(), menuMain().
 
+startAnagrama():-
+    open("arquivos/palavrasAnagrama.txt", read, Dados),
+    getWords(Dados,Palavras),!,
+    close(Dados), 
+    anagrama(Palavras, 10),
+    menuLabel(), menuMain().
 
 termo([_|_], 0, Pontos):- recordLabel(),menuSaveRecordTermo(Pontos).
 termo([Palavra1|[]], Vidas, Pontos):- 
@@ -62,7 +68,6 @@ termo([Palavra1|PalavrasN], Vidas, Pontos) :-
     string_chars(Entrada, EntradaSeparada), line(),
     write(' tentativa anterior:'),checkWord(EntradaSeparada, PalavraSeparada, PalavraSeparada), 
     NP is Pontos - 25, NV is Vidas - 1, termo([Palavra1|PalavrasN], NV, NP)).
-
 
 
 
