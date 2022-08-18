@@ -20,3 +20,9 @@ checkWord([H1|T1],[H2|T2],[H3|T3]):-
     member(H1, [H3|T3]) -> colorYellow2(H1), checkWord(T1, T2, [H3|T3]) ;
     colorRed2(H1), checkWord(T1, T2, [H3|T3])).
 
+recordTermo():-
+    open('arquivos/recordTermoNomes.txt', read, Dados),
+    read(Dados,F1), write(F1).
+
+    
+

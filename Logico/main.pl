@@ -16,7 +16,7 @@ waysGame(1):- termoLabel(), startTermo().
 waysGame(2):- anagramaLabel(), mainAnagrama().   
 waysGame(3):- menuLabel(), menuMain(). 
 
-waysRecords(1):- writeln('recordTermoo').
+waysRecords(1):- recordTermo().
 waysRecords(2):- writeln('recordAnagrama').
 waysRecords(3):- menuLabel(),menuMain().
     
