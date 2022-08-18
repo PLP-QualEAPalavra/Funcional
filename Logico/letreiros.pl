@@ -30,3 +30,9 @@ recordLabel:-
 
 line:-
     writeln(' ____________________________').   
+
+timeOutAnagrama:-
+    writeln(' _______________________________'),
+    writeln('|                               |'),
+    writeln('|         TEMPO ESGOTADO        |'),
+    writeln('|_______________________________|').

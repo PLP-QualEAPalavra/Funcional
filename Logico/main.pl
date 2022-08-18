@@ -33,7 +33,8 @@ startAnagrama():-
     open("arquivos/palavrasAnagrama.txt", read, Dados),
     getWords(Dados,Palavras),!,
     close(Dados), 
-    anagrama(Palavras, 10),
+    get_time(Time),
+    anagrama(Palavras, Time, 10),
     menuLabel(), menuMain().
 
 termo([_|_], 0, Pontos):- recordLabel(),menuSaveRecordTermo(Pontos).
@@ -69,9 +70,18 @@ termo([Palavra1|PalavrasN], Vidas, Pontos) :-
     write(' tentativa anterior:'),checkWord(EntradaSeparada, PalavraSeparada, PalavraSeparada), 
     NP is Pontos - 25, NV is Vidas - 1, termo([Palavra1|PalavrasN], NV, NP)).
 
+anagrama(Palavra, Tempo, Pontos):-
+    get_time(TimeAtual),
+	TimeDif is TimeAtual - Tempo,
+	verify(TimeDif), 
+	writeln('').
+anagrama():-
 
+verify(TimeDif):-(TimeDif >= 600,
+    timeOutAnagrama(),
+    halt; 
+    TimeDif < 600),
 
-         
 
     
 
