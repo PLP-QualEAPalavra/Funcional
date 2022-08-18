@@ -21,8 +21,27 @@ checkWord([H1|T1],[H2|T2],[H3|T3]):-
     colorRed2(H1), checkWord(T1, T2, [H3|T3])).
 
 recordTermo():-
-    open('arquivos/recordTermoNomes.txt', read, Dados),
-    read(Dados,F1), write(F1).
+    getInfo('arquivos/recordTermoNomes.txt', Nomes),
+    getInfo('arquivos/recordTermoPontos.txt', Pontos),
+    order(Pontos, ListaOrganizada).
+    
+    
+order(ListaPontos, ListaPontosOrganizado):-
+   auxOrder(ListaPontos, ListaPontosOrganizado).
+
+auxOrder([H|T], ListaOrganizada):-
+    append(ListaOrganizada, getMax([H|T]),NovaListaOrg)
+    removeMax([H|T], NovaLista)
+    auxOrder(NovaLista, NovaListaOrg).
+
+getMax([H|[]])
+getMax([H|T]):-
+    (H > getMax(T) -> H ; getMax(T)).
+
+getInfo(Caminho, ListaInfo):-
+    open(Caminho, read, Dados),
+    getWords(Dados,ListaInfo),
+    close(Dados),!.
 
     
 
