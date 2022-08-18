@@ -33,22 +33,11 @@ startAnagrama():-
     open("arquivos/palavrasAnagrama.txt", read, Dados),
     getWords(Dados,Termos),!,
     close(Dados),
-    terms_to_strings(Termos,Palavras),
+    terms_to_strings(Termos,TodasPalavras),
+    n_elementos(TodasPalavras,5,Palavras),
     get_time(Tempo),
-    anagrama(Palavras,Palavras, 10,Tempo),
+    anagrama(Palavras,Palavras,10,Tempo),
     menuLabel(), menuMain().
-
-
-%Inicia Anagrama e escolhe palavras da lista do txt
-anagrama([],_,Pontos):- 
-    %lerTxt(ListaBanco),
-    open("arquivos/palavrasTermoo.txt",read,Dados),
-    getWords(Dados,Termos),!,
-    close(Dados),
-    terms_to_strings(Termos,ListaBanco),
-    palavras(ListaBanco,5,ListaPalavras),
-    anagrama(ListaPalavras,ListaPalavras,Pontos).
-
 
 termo([_|_], 0, Pontos):- recordLabel(),menuSaveRecordTermo(Pontos).
 termo([Palavra1|[]], Vidas, Pontos):- 
@@ -83,14 +72,6 @@ termo([Palavra1|PalavrasN], Vidas, Pontos) :-
     write(' tentativa anterior:'),checkWord(EntradaSeparada, PalavraSeparada, PalavraSeparada), 
     NP is Pontos - 25, NV is Vidas - 1, termo([Palavra1|PalavrasN], NV, NP)).
 
-
-
-
-
-         
-
-=======
->>>>>>> 287b6170bf7508ef8522a9fa5893e685cbf4fe3a
     
 
 

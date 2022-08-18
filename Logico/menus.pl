@@ -43,14 +43,31 @@ menuSaveRecordTermo(Pontos):-
     salvaNome(Nome),
     salvaPontos(Pontos).
 
-salvaNome(Nome):-
+salvaNomeTermo(Nome):-
     open('arquivos/recordTermoNomes.txt', append, Dado),
     write(Dado, Nome), writeln(Dado, '.'),
     close(Dado).
 
-salvaPontos(Pontos):-
+salvaPontosTermo(Pontos):-
     open('arquivos/recordTermoPontos.txt', append, Dado),
     write(Dado, Pontos), writeln(Dado, '.'),
     close(Dado).
 
+
+menuSaveRecordAnagrama(Pontos):-
+    writeln(' ____________________________'),
+    writeln(' Insira seu nome:'), write(' '),
+    read(Nome),
+    salvaNome(Nome),
+    salvaPontos(Pontos).
+
+salvaNomeAnagrama(Nome):-
+    open('arquivos/recordAnagramaNomes.txt', append, Dado),
+    write(Dado, Nome), writeln(Dado, '.'),
+    close(Dado).
+
+salvaPontosAnagrama(Pontos):-
+    open('arquivos/recordAnagramaPontos.txt', append, Dado),
+    write(Dado, Pontos), writeln(Dado, '.'),
+    close(Dado).
 

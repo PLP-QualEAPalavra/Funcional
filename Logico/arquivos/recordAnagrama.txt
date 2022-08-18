@@ -1,2 +1,0 @@
-[(guilherme,25)]
-[(jose,24)]

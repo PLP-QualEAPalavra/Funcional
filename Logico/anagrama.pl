@@ -3,6 +3,7 @@
 
 %verificando timer
 anagrama(_,_, Pontos,Tempo):-
+    write("teste2")
     get_time(TimeAtual),
 	TimeDif is TimeAtual - Tempo,
 	verify(TimeDif), 
@@ -14,18 +15,19 @@ verify(TimeDif):-(TimeDif >= 600,
     TimeDif < 600).
 
 %DerrotaPorPontosZerados
-anagrama(_,_,0):-
+anagrama(_,_,0,_):-
     writeln("DERROTA"),
     writeln("# PONTUAÇÃO ZERADA #").
 
 %Vitoria
-anagrama(_,[],Pontos):-
+anagrama(_,[],Pontos,_):-
     writeln("VITÓRIA!!!"),
     write(Pontos),
     menuSaveRecordAnagrama(Pontos),!.
 
 %Anagrama
 anagrama(ListaPalavras,ListaAcertadas,Pontos,Tempo):-
+    write("teste1"),
     Pontos \= 0,
     embaralha(ListaAcertadas,Embaralhado),
     write("Pontos: "),writeln(Pontos),
@@ -35,6 +37,7 @@ anagrama(ListaPalavras,ListaAcertadas,Pontos,Tempo):-
     (   member(X,ListaAcertadas) -> 
     
     %acertou
+    writeln("Acertou!")
     subtract(ListaAcertadas,[X],NovaLista),
     NovoPontos is Pontos + 5,
     anagrama(ListaPalavras,NovaLista,NovoPontos,Tempo);
@@ -57,25 +60,18 @@ terms_to_strings([T|X],[S|Y]):-
     
 
 %retorna N elementos diferentes de uma lista
-palavras([],_,_).
-palavras(L,1,R) :- R = [X],random_member(X,L).
-palavras(L,N,R) :- R = [X|Y], random_member(X,L),
+n_elementos([],_,_).
+n_elementos(L,1,R) :- R = [X],random_member(X,L).
+n_elementos(L,N,R) :- R = [X|Y], random_member(X,L),
     N1 is N-1,
     select(X,L,L1),
-    palavras(L1,N1,Y).
-
-%atomics to strings
-letrasUpper([],[]).
-letrasUpper([X|Y],[X2|Y1]) :- 
-    atom_string(X, X1),
-    string_upper(X1, X2),
-    letrasUpper(Y,Y1).
+    n_elementos(L1,N1,Y).
  
 
 %embaralha strings em uma string sem repetidos 
 embaralha(L,R) :- junta(L,T),
     list_to_set(T,T1),
-    randompermutation(T1,R).
+    random_permutation(T1,R).
 
 %junta strings em lista de atomos
 junta([],[]).
