@@ -43,3 +43,11 @@ menuSaveRecordTermo(Pontos):-
     open('arquivos/recordTermo.txt', append, Ponto),
     writeln(Ponto,[(Nome, Pontos)]),
     close(Ponto),!.
+
+menuSaveRecordAnagrama(Pontos):-
+    writeln(' ____________________________'),
+    writeln(' Insira seu nome:'), write(' '),
+    read(Nome),
+    open('arquivos/recordAnagrama.txt', append, Ponto),
+    writeln(Ponto,[(Nome, Pontos)]),
+    close(Ponto),!.
