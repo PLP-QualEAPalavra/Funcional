@@ -67,7 +67,7 @@ salvaNomeAnagrama(Nome):-
     close(Dado).
 
 salvaPontosAnagrama(Pontos):-
-    open('arquivos/recordAnagramaPontos.txt', append, Dado),
+    open('arquivos/recordAnagramaNomes.txt', append, Dado),
     write(Dado, Pontos), writeln(Dado, '.'),
     close(Dado).
 
