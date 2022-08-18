@@ -1,40 +1,28 @@
 :-include('letreiros.pl').
 :-include('menus.pl').
 
-% main anagrama  
-mainAnagrama:-
-    anagramaLabel(), 
-    anagrama([],[],10).%valor inicial
+%verificando timer
+anagrama(_,_, Pontos,Tempo):-
+    get_time(TimeAtual),
+	TimeDif is TimeAtual - Tempo,
+	verify(TimeDif), 
+	writeln('').
 
-
-%pegar palavras do txt
-getWords(Dados, []):- at_end_of_stream(Dados).
-getWords(Dados, [H|T]):- 
-    \+ at_end_of_stream(Dados),
-    read(Dados,H),
-    getWords(Dados,T).
-
-%Inicia Anagrama e escolhe palavras da lista do txt
-anagrama([],_,Pontos):- 
-    %lerTxt(ListaBanco),
-    open("arquivos/palavrasTermoo.txt",read,Dados),
-    getWords(Dados,Termos),!,
-    close(Dados),
-    terms_to_strings(Termos,ListaBanco),
-    palavras(ListaBanco,5,ListaPalavras),
-    anagrama(ListaPalavras,ListaPalavras,Pontos).
+verify(TimeDif):-(TimeDif >= 600,
+    timeOutAnagrama(),
+    halt; 
+    TimeDif < 600).
 
 %DerrotaPorPontosZerados
 anagrama(_,_,0):-
     writeln("DERROTA"),
-    writeln("# PONTUAÇÃO ZERADA #"),
-    menuSaveRecordAnagrama(0).
+    writeln("# PONTUAÇÃO ZERADA #").
 
 %Vitoria
 anagrama(_,[],Pontos):-
     writeln("VITÓRIA!!!"),
     write(Pontos),
-    menuSaveRecordAnagrama(Pontos).
+    menuSaveRecordAnagrama(Pontos),!.
 
 %Anagrama
 anagrama(ListaPalavras,ListaAcertadas,Pontos):-
