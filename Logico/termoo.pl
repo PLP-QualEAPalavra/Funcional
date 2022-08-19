@@ -47,3 +47,10 @@ printRecord([], []).
 printRecord([Hnome|Tnome], [Hponto|Tponto]):-
     write(' Jogardor: '), write(Hnome), write(' | '), write(' Pontos: '), writeln(Hponto),
     printRecord(Tnome,Tponto).
+
+randomWords([],_,_).
+randomWords(L,1,R) :- R = [X],random_member(X,L).
+randomWords(L,N,R) :- R = [X|Y], random_member(X,L),
+    N1 is N-1,
+    select(X,L,L1),
+    n_elementos(L1,N1,Y).

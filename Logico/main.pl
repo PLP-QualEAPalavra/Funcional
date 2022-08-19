@@ -26,7 +26,9 @@ startTermo():-
     open("arquivos/palavrasTermoo.txt", read, Dados),
     getWords(Dados,Palavras),!,
     close(Dados), 
-    termo(Palavras, 5, 150),
+    length(Palavras, CountPalavras),
+    randomWords(Palavras, CountPalavras, PalavrasRandom),  
+    termo(PalavrasRandom, 5, 150),
     menuLabel(), menuMain().
 
 startAnagrama():-
