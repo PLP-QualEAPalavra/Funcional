@@ -39,11 +39,11 @@ menuCredits():-
 menuSaveRecordTermo(Pontos):-
     writeln(' ____________________________'),
     writeln(' Insira seu nome:'), write(' '),
-    read(Nome),
-    salvaNome(Nome),
-    salvaPontos(Pontos).
+    salvaNomeTermo(),
+    salvaPontosTermo(Pontos).
 
-salvaNomeTermo(Nome):-
+salvaNomeTermo():-
+    read(Nome),
     open('arquivos/recordTermoNomes.txt', append, Dado),
     write(Dado, Nome), writeln(Dado, '.'),
     close(Dado).
@@ -58,8 +58,8 @@ menuSaveRecordAnagrama(Pontos):-
     writeln(' ____________________________'),
     writeln(' Insira seu nome:'), write(' '),
     read(Nome),
-    salvaNome(Nome),
-    salvaPontos(Pontos).
+    salvaNomeAnagrama(Nome),
+    salvaPontosAnagrama(Pontos).
 
 salvaNomeAnagrama(Nome):-
     open('arquivos/recordAnagramaNomes.txt', append, Dado),
@@ -69,5 +69,5 @@ salvaNomeAnagrama(Nome):-
 salvaPontosAnagrama(Pontos):-
     open('arquivos/recordAnagramaPontos.txt', append, Dado),
     write(Dado, Pontos), writeln(Dado, '.'),
-    close(Dado).
+    close(Dado),!.
 

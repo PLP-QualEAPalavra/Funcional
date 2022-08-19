@@ -44,6 +44,6 @@ getInfo(Caminho, ListaInfo):-
     close(Dados),!.
 
 printRecord([], []).
-printRecord([Hnome|Tnome], [(Hponto)|Tponto]):-
+printRecord([Hnome|Tnome], [Hponto|Tponto]):-
     write(' Jogardor: '), write(Hnome), write(' | '), write(' Pontos: '), writeln(Hponto),
     printRecord(Tnome,Tponto).

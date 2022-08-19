@@ -16,9 +16,10 @@ anagrama(_, _, Pontos, _):-%TO DO
 
 %Vitoria
 anagrama(_,[],Pontos,_):-
-    writeln("VITÓRIA!!!"),
-    write(Pontos),
+    writeln("VITORIA!!!"),
+    recordLabel(),
     menuSaveRecordAnagrama(Pontos).
+
 
 %Anagrama
 anagrama(ListaPalavras,ListaAcertadas,Pontos,Tempo):-
@@ -95,5 +96,35 @@ writeSecret(S,X):- write("_ "),X1 is X-1,writeSecret(S,X1).
 
 %record
 recordAnagrama():-
-    open('arquivos/recordAnagramaNomes.txt', read, Dados),
-    read(Dados,F1), write(F1).
+    getInfo('arquivos/recordAnagramaNomes.txt', Nomes),
+    getInfo('arquivos/recordAnagramaPontos.txt', Pontos),
+    sortLists(Nomes, Pontos, ListaNomes, ListaPontos),
+    writeln(' ____________________________'),
+    printRecord(ListaNomes, ListaPontos),
+    writeln(' ____________________________'),
+    writeln(' Digite 1 para voltar: '), read(Op),menuLabel(),menuRecords().
+
+sortLists(Nomes, Pontos, NomeOrg, PontosOrg):-
+    zipPairs(Pontos, Nomes, Pairs),
+    sort(1, @>=, Pairs, PairsOrd),
+    pairs_values(PairsOrd, PontosOrg),
+    pairs_keys(PairsOrd, NomeOrg).
+
+zipPairs([], [], []).
+zipPairs([H1|T1], [H2|T2], [H1-H2|T]) :- zipPairs(T1, T2, T).
+
+getInfo(Caminho, ListaInfo):-
+    open(Caminho, read, Dados),
+    getWords(Dados,ListaInfo),
+    close(Dados),!.
+
+getWords(Dados, []):- at_end_of_stream(Dados).
+getWords(Dados, [H|T]):- 
+    \+ at_end_of_stream(Dados),
+    read(Dados,H),
+    getWords(Dados,T).
+
+printRecord([], []).
+printRecord([Hnome|Tnome], [Hponto|Tponto]):-
+    write(' Jogardor: '), write(Hnome), write(' | '), write(' Pontos: '), writeln(Hponto),
+    printRecord(Tnome,Tponto).
