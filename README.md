@@ -13,10 +13,10 @@ Execução do projeto:
 Necessario que o ambiente Prolog esteja configurado e funcionando devidamente. 
 Para jogar basta entrar na pasta Logico, e execultar:
 
-' swipl main.pl '
+``` swipl main.pl ```
 
 Assim foi carregado o arquivo para execultar agora basta usar:
 
-' main. '
+``` main. ```
 
 parar execultar o projeto.
