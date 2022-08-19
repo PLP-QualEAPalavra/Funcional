@@ -99,13 +99,15 @@ recordAnagrama():-
     getInfo('arquivos/recordAnagramaNomes.txt', Nomes),
     getInfo('arquivos/recordAnagramaPontos.txt', Pontos),
     sortLists(Nomes, Pontos, ListaNomes, ListaPontos),
+    remove('end_of_file', ListaNomes, NomesOrg),
+    remove('end_of_file', ListaPontos, PontosOrg),
     writeln(' ____________________________'),
-    printRecord(ListaNomes, ListaPontos),
+    printRecord(NomesOrg, PontosOrg),
     writeln(' ____________________________'),
     writeln(' Digite 1 para voltar: '), read(Op),menuLabel(),menuRecords().
 
 sortLists(Nomes, Pontos, NomeOrg, PontosOrg):-
-    zipPairs(Pontos, Nomes, Pairs),
+    zipPairs(Nomes, Pontos, Pairs),
     sort(1, @>=, Pairs, PairsOrd),
     pairs_values(PairsOrd, PontosOrg),
     pairs_keys(PairsOrd, NomeOrg).
@@ -128,3 +130,6 @@ printRecord([], []).
 printRecord([Hnome|Tnome], [Hponto|Tponto]):-
     write(' Jogardor: '), write(Hnome), write(' | '), write(' Pontos: '), writeln(Hponto),
     printRecord(Tnome,Tponto).
+
+remove(X, [X|T], T).
+remove(X, [H|T], [H|T1]):- remove(X,T,T1).

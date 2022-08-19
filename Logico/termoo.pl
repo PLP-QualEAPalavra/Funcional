@@ -2,7 +2,7 @@ colorRed2(Z):- ansi_format([bold,fg(red)], ' ~w', [Z]).
 colorGreen2(Z):- ansi_format([bold,fg(green)], ' ~w', [Z]).
 colorYellow2(Z):- ansi_format([bold,fg(yellow)], ' ~w', [Z]).
 
-getWords(Dados, []):- at_end_of_stream(Dados).
+getWords(Dados, [])at_end_of_stream(Dados).
 getWords(Dados, [H|T]):- 
     \+ at_end_of_stream(Dados),
     read(Dados,H),
@@ -25,12 +25,14 @@ recordTermo():-
     getInfo('arquivos/recordTermoPontos.txt', Pontos),
     sortLists(Nomes, Pontos, ListaNomes, ListaPontos),
     writeln(' ____________________________'),
-    printRecord(ListaNomes, ListaPontos),
+    remove('end_of_file', ListaNomes, NomesOrg),
+    remove('end_of_file', ListaPontos, PontosOrg),
+    printRecord(NomesOrg, PontosOrg),
     writeln(' ____________________________'),
     writeln(' Digite 1 para voltar: '), read(Op),menuLabel(),menuRecords().
 
 sortLists(Nomes, Pontos, NomeOrg, PontosOrg):-
-    zipPairs(Pontos, Nomes, Pairs),
+    zipPairs(Nomes, Pontos, Pairs),
     sort(1, @>=, Pairs, PairsOrd),
     pairs_values(PairsOrd, PontosOrg),
     pairs_keys(PairsOrd, NomeOrg).
@@ -44,7 +46,7 @@ getInfo(Caminho, ListaInfo):-
     close(Dados),!.
 
 printRecord([], []).
-printRecord([Hnome|Tnome], [Hponto|Tponto]):-
+printRecord([Hnome|Tnome], [Hponto|Tponto]):-    
     write(' Jogardor: '), write(Hnome), write(' | '), write(' Pontos: '), writeln(Hponto),
     printRecord(Tnome,Tponto).
 
@@ -54,3 +56,4 @@ randomWords(L,N,R) :- R = [X|Y], random_member(X,L),
     N1 is N-1,
     select(X,L,L1),
     n_elementos(L1,N1,Y).
+

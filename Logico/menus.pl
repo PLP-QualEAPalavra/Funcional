@@ -50,7 +50,7 @@ salvaNomeTermo():-
 
 salvaPontosTermo(Pontos):-
     open('arquivos/recordTermoPontos.txt', append, Dado),
-    write(Dado, Pontos), writeln(Dado, '.'),
+    write(Dado, Pontos), writeln(Dado,'.'),
     close(Dado).
 
 
@@ -73,7 +73,7 @@ salvaPontosAnagrama(Pontos):-
 
 regraAnagrama():-
     writeln(' ____________________________________________'),
-    writeln(' A cada nova palavra, você inicia o jogo com'),
+    writeln(' A cada nova palavra, voce inicia o jogo com'),
     writeln(' não não ultrapasse o tempo de 10 minutos. '),
     writeln(' Nesse modo existe um conjunto de palavras'),
     writeln(' com caracteres em comum e o jogador deve'),

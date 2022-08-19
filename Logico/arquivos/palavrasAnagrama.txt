@@ -3,7 +3,3 @@ amo.
 aro.
 ato.
 ela.
-teste.
-arquivo.
-forma.
-peso.
