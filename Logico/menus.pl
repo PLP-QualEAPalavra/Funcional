@@ -71,3 +71,50 @@ salvaPontosAnagrama(Pontos):-
     write(Dado, Pontos), writeln(Dado, '.'),
     close(Dado),!.
 
+regraAnagrama():-
+    writeln(' ____________________________________________'),
+    writeln(' A cada nova palavra, você inicia o jogo com'),
+    writeln(' não não ultrapasse o tempo de 10 minutos. '),
+    writeln(' Nesse modo existe um conjunto de palavras'),
+    writeln(' com caracteres em comum e o jogador deve'),
+    writeln(' encontrar que forme uma palavra.'),
+    writeln(' A cada palavra acertada, você ganha 10'),
+    writeln(' pontos, sendo somado no seu total de pontos.'),
+    writeln(' Quando acerta uma palavra em sequência, '),
+    writeln(' aumentará '),
+    writeln(' um multiplicador, por exemplo com o '),
+    writeln(' acerto de uma palavra é alcançado 10 pontos,'),
+    writeln(' com o acerto de outra em seguida se consegue'),
+    writeln(' 20 pontos.'),
+    writeln(' A cada tentativa errada se perde 1 ponto.  '),
+    writeln(' partida acaba quando é alcançado o limite do'),
+    writeln(' tempo ou se acertando todas as palavras'),
+    writeln(' do anagrama. '),
+    writeln(' ____________________________________________'),
+    writeln('          Digite 1 para comecar!             '),
+    writeln(' ____________________________________________'),
+    read(Op).
+
+regraTermo():-
+    writeln(' ____________________________________________'),
+    writeln(' A cada nova palavra, você inicia o jogo com'),
+    writeln(' 150 pontos. Para cada tentativa que você não'),
+    writeln(' acertar a palavra, você perde 25 pontos,ou'),
+    writeln(' seja, se você acertar a palavra de primeira,'),
+    writeln(' pontua 150 pontos, se acertar na segunda, '),
+    writeln(' pontua 125 pontos e assim respectivamente.'),
+    writeln(' caso suas vidas acabem, o jogo sera encer-'),
+    writeln(' rado.'),
+    writeln(' ____________________________________________'),
+    writeln(' Se a letra aparecer verde: ela esta na pala-'),
+    writeln(' vra e na posicao correta. '),
+    writeln(' Se a letra aparecer amarela: ela esta na pala-,'),
+    writeln(' vra mas a posicao esta incorreta. '),
+    writeln(' Se a letra aparecer vermelha: ela nao esta na'),
+    writeln(' palavra.'),
+    writeln(' ____________________________________________'),
+    writeln('          Digite 1 para comecar!             '),
+    writeln(' ____________________________________________'),
+    read(Op).
+
+

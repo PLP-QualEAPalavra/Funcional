@@ -12,8 +12,8 @@ waysMain(2):- menuLabel(),menuRecords().
 waysMain(3):- creditLabel(),menuCredits().
 waysMain(4):- halt.
 
-waysGame(1):- termoLabel(), startTermo().
-waysGame(2):- anagramaLabel(), startAnagrama().   
+waysGame(1):- termoLabel(), regraTermo(), termoLabel(), startTermo().
+waysGame(2):- anagramaLabel(),regraAnagrama(), anagramaLabel(), startAnagrama().   
 waysGame(3):- menuLabel(), menuMain(). 
 
 waysRecords(1):- recordLabel(),recordTermo(),menuMain().
