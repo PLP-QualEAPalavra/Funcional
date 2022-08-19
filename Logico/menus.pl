@@ -23,7 +23,7 @@ menuRecords():-
     writeln(' 2 - Recordes Anagrama'),
     writeln(' 3 - voltar'),
     writeln(' ____________________________'),
-    writeln('Insira a opcao: '), write(' '), read(Op), waysRecords(Op). 
+    writeln(' Insira a opcao: '), write(' '), read(Op), waysRecords(Op). 
 
 menuCredits():-
     writeln(' ____________________________'),

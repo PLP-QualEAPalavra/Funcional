@@ -23,25 +23,27 @@ checkWord([H1|T1],[H2|T2],[H3|T3]):-
 recordTermo():-
     getInfo('arquivos/recordTermoNomes.txt', Nomes),
     getInfo('arquivos/recordTermoPontos.txt', Pontos),
-    order(Pontos, ListaOrganizada).
-    
-    
-order(ListaPontos, ListaPontosOrganizado):-
-   auxOrder(ListaPontos, ListaPontosOrganizado).
+    sortLists(Nomes, Pontos, ListaNomes, ListaPontos),
+    writeln(' ____________________________'),
+    printRecord(ListaNomes, ListaPontos),
+    writeln(' ____________________________'),
+    writeln(' Digite 1 para voltar: '), read(Op),menuLabel(),menuRecords().
 
-auxOrder([H|T], ListaOrganizada):-
-    append(ListaOrganizada, getMax([H|T]),NovaListaOrg)
-    removeMax([H|T], NovaLista)
-    auxOrder(NovaLista, NovaListaOrg).
+sortLists(Nomes, Pontos, NomeOrg, PontosOrg):-
+    zipPairs(Pontos, Nomes, Pairs),
+    sort(1, @>=, Pairs, PairsOrd),
+    pairs_values(PairsOrd, PontosOrg),
+    pairs_keys(PairsOrd, NomeOrg).
 
-getMax([H|[]])
-getMax([H|T]):-
-    (H > getMax(T) -> H ; getMax(T)).
+zipPairs([], [], []).
+zipPairs([H1|T1], [H2|T2], [H1-H2|T]) :- zipPairs(T1, T2, T).
 
 getInfo(Caminho, ListaInfo):-
     open(Caminho, read, Dados),
     getWords(Dados,ListaInfo),
     close(Dados),!.
 
-    
-
+printRecord([], []).
+printRecord([Hnome|Tnome], [(Hponto)|Tponto]):-
+    write(' Jogardor: '), write(Hnome), write(' | '), write(' Pontos: '), writeln(Hponto),
+    printRecord(Tnome,Tponto).

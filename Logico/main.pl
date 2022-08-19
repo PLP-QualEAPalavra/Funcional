@@ -16,10 +16,10 @@ waysGame(1):- termoLabel(), startTermo().
 waysGame(2):- anagramaLabel(), startAnagrama().   
 waysGame(3):- menuLabel(), menuMain(). 
 
-waysRecords(1):- recordTermo().
+waysRecords(1):- recordLabel(),recordTermo(),menuMain().
 waysRecords(2):- recordAnagrama().
 waysRecords(3):- menuLabel(),menuMain().
-    
+
 waysCredit(_):- menuLabel(), menuMain().
 
 startTermo():-
